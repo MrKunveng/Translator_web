@@ -1,5 +1,3 @@
-# app.py
-
 import streamlit as st
 from translator import listen_and_translate, text_to_speech, get_audio_filename
 import threading
