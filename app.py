@@ -4,6 +4,9 @@ import streamlit as st
 import threading
 import queue
 from translator import listen_and_translate, text_to_speech, get_audio_filename
+import os
+import tempfile
+from pathlib import Path
 
 # Set page configuration
 st.set_page_config(
@@ -124,7 +127,22 @@ def main():
                     st.markdown(f"**{LANGUAGE_FLAGS.get(target_lang, '')} {target_lang_name}:** {translated_text}")
                 
                 # Play the translation
-                text_to_speech(translated_text, target_lang)
+                try:
+                    # Get audio file path without playing it
+                    audio_file = get_audio_filename(translated_text, target_lang)
+                    
+                    # Check if file exists
+                    if audio_file.exists():
+                        st.audio(str(audio_file))
+                    else:
+                        # Generate the audio file
+                        from gtts import gTTS
+                        tts = gTTS(text=translated_text, lang=target_lang)
+                        tts.save(str(audio_file))
+                        st.audio(str(audio_file))
+                except Exception as e:
+                    st.warning(f"Could not play audio: {str(e)}")
+                    st.info("Audio playback requires ffmpeg to be installed.")
         except Exception as e:
             st.error(f"Error processing translation: {str(e)}")
     
@@ -158,7 +176,22 @@ def main():
                     st.markdown(f"**{LANGUAGE_FLAGS.get(target_lang, '')} {target_lang_name}:** {translated_text}")
                     
                     # Play the translation
-                    text_to_speech(translated_text, target_lang)
+                    try:
+                        # Get audio file path without playing it
+                        audio_file = get_audio_filename(translated_text, target_lang)
+                        
+                        # Check if file exists
+                        if audio_file.exists():
+                            st.audio(str(audio_file))
+                        else:
+                            # Generate the audio file
+                            from gtts import gTTS
+                            tts = gTTS(text=translated_text, lang=target_lang)
+                            tts.save(str(audio_file))
+                            st.audio(str(audio_file))
+                    except Exception as e:
+                        st.warning(f"Could not play audio: {str(e)}")
+                        st.info("Audio playback requires ffmpeg to be installed.")
             except Exception as e:
                 st.error(f"Error translating text: {str(e)}")
         else:
