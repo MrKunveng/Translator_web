@@ -1,5 +1,3 @@
-# translator.py
-
 import speech_recognition as sr
 from deep_translator import GoogleTranslator
 from gtts import gTTS
@@ -9,7 +7,8 @@ import hashlib
 from pathlib import Path
 import threading
 import queue
-import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 
 class RealTimeTranslator:
     def __init__(self, source_lang='en', target_lang='fr'):
@@ -123,7 +122,8 @@ class RealTimeTranslator:
                 tts = gTTS(text=text, lang=target_lang)
                 tts.save(str(audio_file))
             
-            playsound.playsound(str(audio_file))
+            sound = AudioSegment.from_mp3(str(audio_file))
+            play(sound)
         except Exception as e:
             print(f"\nFailed to process text-to-speech: {str(e)}")
     
