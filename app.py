@@ -43,10 +43,29 @@ LANGUAGE_FLAGS = {
     "zh-CN": "🇨🇳"
 }
 
+def check_ffmpeg():
+    """Check if FFmpeg is available and provide installation instructions if not."""
+    try:
+        import subprocess
+        subprocess.check_output(['ffmpeg', '-version'], stderr=subprocess.STDOUT)
+        return True
+    except (subprocess.SubprocessError, FileNotFoundError):
+        st.warning("⚠️ FFmpeg is not installed or not in PATH. Audio playback may not work.")
+        st.info("""
+        To install FFmpeg:
+        - **Ubuntu/Debian**: `sudo apt-get install ffmpeg`
+        - **macOS**: `brew install ffmpeg`
+        - **Windows**: Download from [FFmpeg.org](https://ffmpeg.org/download.html) or install via Chocolatey: `choco install ffmpeg`
+        """)
+        return False
+
 def main():
     # App title and description
     st.title("🌐 Real-Time Language Translator")
     st.markdown("Speak in one language, translate to another in real-time.")
+    
+    # Check for FFmpeg
+    ffmpeg_available = check_ffmpeg()
     
     # Initialize session state
     if 'translation_active' not in st.session_state:
