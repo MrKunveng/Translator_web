@@ -1,3 +1,5 @@
+# app.py
+
 import streamlit as st
 import threading
 import queue
@@ -86,7 +88,7 @@ def main():
                     daemon=True
                 )
                 st.session_state.translation_thread.start()
-                st.experimental_rerun()
+                st.rerun()
     with col2:
         if st.session_state.translation_active:
             if st.button("Stop Translation", type="secondary", use_container_width=True):
@@ -96,7 +98,7 @@ def main():
                     st.session_state.input_queue.get()
                 while not st.session_state.output_queue.empty():
                     st.session_state.output_queue.get()
-                st.experimental_rerun()
+                st.rerun()
     
     # Display translation status
     if st.session_state.translation_active:
