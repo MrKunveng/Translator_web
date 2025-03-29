@@ -2,5 +2,4 @@ streamlit>=1.22.0
 SpeechRecognition>=3.10.0
 deep-translator>=1.11.4
 gTTS>=2.3.2
-PyAudio>=0.2.13
 pydub>=0.25.1
